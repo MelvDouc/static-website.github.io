@@ -9,6 +9,7 @@
     "strict": true,
     "verbatimModuleSyntax": true,
     "jsx": "preserve",
+    "outDir": "dist",
     "baseUrl": "src",
     "paths": {
       "@/*": [
