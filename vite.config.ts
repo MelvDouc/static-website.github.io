@@ -14,5 +14,11 @@ export default defineConfig({
       "@": join(root, "src")
     }
   },
-  base: "/static-website.github.io/"
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: "modern-compiler"
+      }
+    }
+  }
 });
