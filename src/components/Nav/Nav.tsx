@@ -1,27 +1,28 @@
 import Dropdown from "@/components/Dropdown/Dropdown.jsx";
 import cssClasses from "./Nav.module.scss";
+import Link from "@/components/Link/Link.jsx";
 
 export default function Nav() {
   return (
     <nav className={cssClasses.nav}>
       <ul>
         <li>
-          <a href="/" className={cssClasses.navLink}>Home</a>
+          <Link href="/" className={cssClasses.navLink}>Home</Link>
         </li>
         <li>
           <Dropdown>
-            <a href="/projects" className={cssClasses.navLink}>Projects</a>
+            <Link href="/projects" className={cssClasses.navLink}>Projects</Link>
             <div className={cssClasses.projectLinks}>
-              <a href="/projects/calculator">Calculator</a>
-              <a href="/projects/connect-4">Connect 4</a>
-              <a href="/projects/minesweeper">Minesweeper</a>
-              <a href="/projects/password-generator">Password generator</a>
-              <a href="/projects/snake">Snake</a>
+              <Link href="/projects/calculator">Calculator</Link>
+              <Link href="/projects/connect-4">Connect 4</Link>
+              <Link href="/projects/minesweeper">Minesweeper</Link>
+              <Link href="/projects/password-generator">Password generator</Link>
+              <Link href="/projects/snake">Snake</Link>
             </div>
           </Dropdown>
         </li>
         <li>
-          <a href="/cv" className={cssClasses.navLink}>CV</a>
+          <Link href="/cv" className={cssClasses.navLink}>CV</Link>
         </li>
       </ul>
     </nav>
