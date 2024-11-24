@@ -13,5 +13,6 @@ export default defineConfig({
     alias: {
       "@": join(root, "src")
     }
-  }
+  },
+  base: "/static-website/"
 });
