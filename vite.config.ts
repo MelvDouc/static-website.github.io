@@ -20,5 +20,6 @@ export default defineConfig({
         api: "modern-compiler"
       }
     }
-  }
+  },
+  base: "/static-website.github.io/"
 });
