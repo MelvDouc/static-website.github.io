@@ -21,10 +21,14 @@ export default function App(): DocumentFragment {
     <>
       <Header />
       <main>
-        <Router onNavigationComplete={() => languageObs.notify()}>
-          <Route path="/" component={HomePage} title="Home | Melvin Doucet's Website" />
-          <Route path="/projects" component={ProjectsPage} title="Projects | Melvin Doucet's Website" />
-          <Route path="/cv" component={ResumePage} title="Résumé | Melvin Doucet's Website" />
+        <Router
+          onNavigationComplete={() => languageObs.notify()}
+          baseUrl="/static-website.github.io"
+          titleTransformFn={(title) => `${title} | Melvin Doucet's Website`}
+        >
+          <Route path="/" component={HomePage} title="Home" />
+          <Route path="/projects" component={ProjectsPage} title="Projects" />
+          <Route path="/cv" component={ResumePage} title="Résumé" />
           <Route path="/projects/calculator" title="Calculator" component={Calculator} />
           <Route path="/projects/connect-4" title="Connect 4" component={Connect4} />
           <Route path="/projects/minesweeper" title="Minesweeper" component={Minesweeper} />

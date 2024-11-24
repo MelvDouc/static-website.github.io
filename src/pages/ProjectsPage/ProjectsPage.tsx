@@ -1,3 +1,4 @@
+import Link from "@/components/Link/Link.jsx";
 import cssClasses from "./ProjectsPage.module.scss";
 
 export default function ProjectsPage() {
@@ -5,11 +6,11 @@ export default function ProjectsPage() {
     <div className="page">
       <h2>Projects</h2>
       <ul className={cssClasses.projectsList}>
-        <li><a href="/projects/calculator">Calculator</a></li>
-        <li><a href="/projects/connect-4">Connect 4</a></li>
-        <li><a href="/projects/minesweeper">Minesweeper</a></li>
-        <li><a href="/projects/password-generator">Password generator</a></li>
-        <li><a href="/projects/snake">Snake</a></li>
+        <li><Link href="/projects/calculator">Calculator</Link></li>
+        <li><Link href="/projects/connect-4">Connect 4</Link></li>
+        <li><Link href="/projects/minesweeper">Minesweeper</Link></li>
+        <li><Link href="/projects/password-generator">Password generator</Link></li>
+        <li><Link href="/projects/snake">Snake</Link></li>
       </ul>
     </div>
   );

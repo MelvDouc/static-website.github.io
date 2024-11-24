@@ -13,5 +13,12 @@ export default defineConfig({
     alias: {
       "@": join(root, "src")
     }
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: "modern-compiler"
+      }
+    }
   }
 });
