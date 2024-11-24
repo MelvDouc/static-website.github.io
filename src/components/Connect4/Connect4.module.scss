@@ -1,0 +1,15 @@
+.connect4 {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  color: white;
+
+  .connect4Buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5em;
+  }
+}
