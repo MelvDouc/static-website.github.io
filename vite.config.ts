@@ -14,5 +14,5 @@ export default defineConfig({
       "@": join(root, "src")
     }
   },
-  base: "/static-website/"
+  base: "/static-website.github.io/"
 });
