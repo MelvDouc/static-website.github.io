@@ -13,18 +13,13 @@ export default function Dropdown({ children }: {
       open={isOpen}
       $init={(element) => {
         document.addEventListener("click", ({ target }) => {
-          if (target instanceof Node && element !== target && !element.contains(target))
-            isOpen.value &&= false;
+          if (target instanceof Node && element !== target)
+            isOpen.value = false;
         });
       }}
     >
       <summary>{summary}</summary>
-      <div
-        className={cssClasses.dropdownContent}
-        onclick={() => isOpen.value &&= false}
-      >
-        {content}
-      </div>
+      <div className={cssClasses.dropdownContent} onclick={() => isOpen.value &&= false}>{content}</div>
     </details>
   );
 }

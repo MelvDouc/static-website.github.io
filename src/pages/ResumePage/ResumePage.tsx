@@ -1,3 +1,6 @@
+import favicon from "@/assets/favicon.png";
+import githubLogo from "@/assets/github-logo.png";
+import ownPicture from "@/assets/melvin-doucet.jpg";
 import CvSkillsList from "@/components/CvSkillsList/CvSkillsList.jsx";
 import { trl } from "@/utils/translations/translations.service.js";
 import cssClasses from "./ResumePage.module.scss";
@@ -12,7 +15,7 @@ export default function ResumePage() {
 
       <section className={cssClasses.pageBottom}>
         <article className={cssClasses.picContainer}>
-          <img src="/img/cv/melvin-doucet.jpg" alt="Melvin Doucet" />
+          <img src={ownPicture} alt="Melvin Doucet" />
         </article>
 
         <article className={cssClasses.contactDetail}>
@@ -22,9 +25,9 @@ export default function ResumePage() {
             <dd>+33.6.09.21.97.14</dd>
             <dt>@</dt>
             <dd>melv.douc@gmail.com</dd>
-            <dt><img src="/img/cv/github-logo.png" alt="GitHub Logo" /></dt>
+            <dt><img src={githubLogo} alt="GitHub Logo" /></dt>
             <dd><a href="https://github.com/MelvDouc">https://github.com/MelvDouc</a></dd>
-            <dt><img src="/img/favicon.png" alt="Logo" /></dt>
+            <dt><img src={favicon} alt="Logo" /></dt>
             <dd><a href="https://www.melvin-doucet.com">https://www.melvin-doucet.com</a></dd>
             <dt>✉️</dt>
             <dd>

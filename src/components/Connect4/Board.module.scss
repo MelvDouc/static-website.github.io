@@ -1,7 +1,0 @@
-.board {
-  height: calc(10vmin * var(--connect4-rows));
-  width: calc(10vmin * var(--connect4-cols));
-  display: grid;
-  grid-template-rows: repeat(var(--connect4-rows), 1fr);
-  grid-template-columns: repeat(var(--connect4-cols), 1fr);
-}

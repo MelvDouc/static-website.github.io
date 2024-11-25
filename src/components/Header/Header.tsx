@@ -1,5 +1,6 @@
 import Link from "@/components/Link/Link.jsx";
 import Nav from "@/components/Nav/Nav.jsx";
+import Logo from "@/assets/favicon.png";
 import cssClasses from "./Header.module.scss";
 
 export default function Header() {
@@ -9,7 +10,7 @@ export default function Header() {
         <article>
           <Link href="/" style={{ display: "block" }}>
             <img
-              src="/img/favicon.png"
+              src={Logo}
               alt="Logo"
               className={cssClasses.logo}
             />

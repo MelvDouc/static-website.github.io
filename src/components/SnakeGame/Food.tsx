@@ -1,3 +1,4 @@
+import food from "@/assets/snake/food.png";
 import { randomInt } from "@/utils/random.js";
 import type SnakeCanvas from "./SnakeCanvas.jsx";
 
@@ -8,7 +9,7 @@ export default class Food {
   public randomizeCoords: VoidFunction;
 
   constructor({ width, squareSize, squaresPerLine, snake }: SnakeCanvas) {
-    this.image = <img src="/img/snake/food.png" />;
+    this.image = <img src={food} />;
     this.x = width - squareSize * 2;
     this.y = squareSize;
     this.randomizeCoords = () => {

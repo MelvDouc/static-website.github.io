@@ -23,7 +23,7 @@ export default function App(): DocumentFragment {
       <main>
         <Router
           onNavigationComplete={() => languageObs.notify()}
-          baseUrl="/static-website.github.io"
+          basePath="/static-website.github.io"
           titleTransformFn={(title) => `${title} | Melvin Doucet's Website`}
         >
           <Route path="/" component={HomePage} title="Home" />

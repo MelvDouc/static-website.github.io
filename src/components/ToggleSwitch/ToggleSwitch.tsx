@@ -18,7 +18,7 @@ export default function ToggleSwitch({ id, checked, disabled, oninput }: {
           if (oninput)
             input.oninput = oninput;
           if (disabled !== undefined) {
-            if (disabled instanceof Obs) {
+            if (typeof disabled === "object") {
               input.disabled = disabled.value;
               disabled.subscribe((value) => input.disabled = value);
               return;

@@ -1,7 +1,6 @@
 enum Player {
-  RED = 1,
-  YELLOW = -RED
+  RED,
+  YELLOW
 }
 
-export type Checker = Player | 0;
 export default Player;

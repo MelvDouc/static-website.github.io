@@ -1,81 +1,163 @@
-import { type Obs, obs } from "reactfree-jsx";
-import getWinningLine from "./get-winning-line.js";
-import BoardDimensions from "./BoardDimensions.js";
-import Player, { type Checker } from "./Player.js";
+import { BOARD_HEIGHT, cellOf, getX } from "@/components/Connect4/game/BoardDimensions.js";
+import Player from "@/components/Connect4/game/Player.js";
+import { clearCell, isCellSet, setCell } from "@/components/Connect4/game/bit-boards.js";
+import { findWinningLine } from "@/components/Connect4/game/winning-line.js";
 
 export default class Game {
-  private static readonly EMPTY_BOARD = Array.from({ length: BoardDimensions.HEIGHT }, () => {
-    return Array(BoardDimensions.WIDTH).fill(0);
-  }) as Checker[][];
+  public static readonly instance = new this();
 
-  private static readonly DEFAULT_STATE = {
-    player: Player.RED,
-    board: Game.EMPTY_BOARD,
-    winningIndices: null
-  };
+  private readonly _bitBoards: bigint[] = Array(2).fill(0n);
+  private readonly _history: HistoryItem[] = [];
+  private readonly _eventTarget = new EventTarget();
+  private _activePlayer: Player = Player.RED;
+  private _isOver = false;
 
-  private stateObs: Obs<GameState>;
-  private readonly prevStates: GameState[] = [];
+  private constructor() { }
 
-  constructor() {
-    this.stateObs = obs(Game.DEFAULT_STATE);
+  private get _fullOccupancy(): bigint {
+    return this._bitBoards[Player.RED] | this._bitBoards[Player.YELLOW];
   }
 
-  public get activePlayer(): Player {
-    return this.stateObs.value.player;
-  }
-
-  public get board(): Checker[][] {
-    return this.stateObs.value.board;
-  }
-
-  public setChecker(y: number): void {
-    if (this.stateObs.value.winningIndices)
+  public play(index: number): void {
+    if (this._isOver)
       return;
 
-    for (let x = BoardDimensions.HEIGHT - 1; x >= 0; x--) {
-      if (this.board[x][y] !== 0)
-        continue;
+    const actualIndex = this._firstEmptyCellOnColumn(getX(index));
 
-      const board = structuredClone(this.board);
-      board[x][y] = this.activePlayer;
+    if (actualIndex === -1)
+      return;
 
-      this.prevStates.push(this.stateObs.value);
-      this.stateObs.value = {
-        board,
-        winningIndices: getWinningLine(board, this.activePlayer, { x, y }),
-        player: -this.activePlayer
-      };
+    this._bitBoards[this._activePlayer] = setCell(this._bitBoards[this._activePlayer], actualIndex);
+    this._emitSetPiece(actualIndex, this._activePlayer);
+    this._history.push({
+      index: actualIndex,
+      activePlayer: this._activePlayer
+    });
+
+    const winningLine = findWinningLine(this._bitBoards[this._activePlayer]);
+
+    if (winningLine) {
+      this._emitWin(winningLine);
       return;
     }
-  }
 
-  public onPlayerChange(subscription: (player: Player) => void): void {
-    this.stateObs.subscribe(({ player }) => subscription(player));
-  }
-
-  public onBoardChange(subscription: (board: Checker[][]) => void): void {
-    this.stateObs.subscribe(({ board }) => subscription(board));
-  }
-
-  public onResultChange(subscription: (winningIndices: Set<number> | null) => void): void {
-    this.stateObs.subscribe(({ winningIndices }) => subscription(winningIndices));
+    this._setActivePlayer(1 - this._activePlayer);
   }
 
   public undoLastMove(): void {
-    const prevState = this.prevStates.pop();
-    if (prevState)
-      this.stateObs.value = prevState;
+    const prevState = this._history.pop();
+
+    if (!prevState)
+      return;
+
+    const { index: cell, activePlayer } = prevState;
+    this._bitBoards[activePlayer] = clearCell(this._bitBoards[activePlayer], cell);
+    this._isOver = false;
+    this._emitRemovedPiece(cell, activePlayer);
+    this._setActivePlayer(activePlayer);
   }
 
   public restart(): void {
-    this.prevStates.length = 0;
-    this.stateObs.value = Game.DEFAULT_STATE;
+    this._bitBoards[Player.RED] = 0n;
+    this._bitBoards[Player.YELLOW] = 0n;
+    this._history.length = 0;
+    this._activePlayer = Player.RED;
+    this._isOver = false;
+    this._emitAction({ kind: "game-reset" });
+  }
+
+  public onAction(listener: (action: GameAction) => void): void {
+    this._eventTarget.addEventListener("game-action", (e) => {
+      listener((e as CustomEvent<GameAction>).detail);
+    });
+  }
+
+  private _emitAction(action: GameAction): void {
+    this._eventTarget.dispatchEvent(
+      new CustomEvent("game-action", { detail: action })
+    );
+  }
+
+  private _emitSetPiece(cell: number, player: Player): void {
+    this._emitAction({
+      kind: "piece-set",
+      player,
+      index: cell
+    });
+  }
+
+  private _emitRemovedPiece(cell: number, player: Player): void {
+    this._emitAction({
+      kind: "piece-removed",
+      player,
+      index: cell
+    });
+  }
+
+  private _emitWin(winningLine: number[]): void {
+    this._emitAction({
+      kind: "game-won",
+      winner: this._activePlayer,
+      winningLine
+    });
+    this._isOver = true;
+  }
+
+  private _firstEmptyCellOnColumn(x: number): number {
+    for (let y = 0; y < BOARD_HEIGHT; y++) {
+      const cell = cellOf(y, x);
+
+      if (!isCellSet(this._fullOccupancy, cell))
+        return cell;
+    }
+
+    return -1;
+  }
+
+  private _setActivePlayer(player: Player): void {
+    this._activePlayer = player;
+    this._emitAction({
+      kind: "player-change",
+      player
+    });
   }
 }
 
-interface GameState {
-  player: Player;
-  board: Checker[][];
-  winningIndices: Set<number> | null;
+interface HistoryItem {
+  index: number;
+  activePlayer: Player;
 }
+
+type PieceSetAction = {
+  kind: "piece-set";
+  index: number;
+  player: Player;
+};
+
+type PieceRemovedAction = {
+  kind: "piece-removed";
+  index: number;
+  player: Player;
+};
+
+type PlayerChangeAction = {
+  kind: "player-change";
+  player: Player;
+};
+
+type GameWonAction = {
+  kind: "game-won";
+  winner: Player;
+  winningLine: number[];
+};
+
+type GameResetAction = {
+  kind: "game-reset";
+};
+
+type GameAction =
+  | PieceSetAction
+  | PieceRemovedAction
+  | PlayerChangeAction
+  | GameWonAction
+  | GameResetAction;
