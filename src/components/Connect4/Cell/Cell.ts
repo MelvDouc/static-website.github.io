@@ -34,7 +34,7 @@ export default class Cell extends HTMLElement {
 
   public reset(): void {
     this.removePiece();
-    this.classList.remove(cssClasses.CellWin);
+    this.setWinning(false);
   }
 }
 

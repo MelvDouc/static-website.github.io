@@ -1,4 +1,4 @@
-import { BOARD_HEIGHT, cellOf, getX } from "@/components/Connect4/game/BoardDimensions.js";
+import { BOARD_HEIGHT, indexOf, getX } from "@/components/Connect4/game/BoardDimensions.js";
 import Player from "@/components/Connect4/game/Player.js";
 import { clearCell, isCellSet, setCell } from "@/components/Connect4/game/bit-boards.js";
 import { findWinningLine } from "@/components/Connect4/game/winning-line.js";
@@ -38,6 +38,7 @@ export default class Game {
 
     if (winningLine) {
       this._emitWin(winningLine);
+      this._isOver = true;
       return;
     }
 
@@ -78,19 +79,19 @@ export default class Game {
     );
   }
 
-  private _emitSetPiece(cell: number, player: Player): void {
+  private _emitSetPiece(index: number, player: Player): void {
     this._emitAction({
       kind: "piece-set",
       player,
-      index: cell
+      index
     });
   }
 
-  private _emitRemovedPiece(cell: number, player: Player): void {
+  private _emitRemovedPiece(index: number, player: Player): void {
     this._emitAction({
       kind: "piece-removed",
       player,
-      index: cell
+      index
     });
   }
 
@@ -100,12 +101,11 @@ export default class Game {
       winner: this._activePlayer,
       winningLine
     });
-    this._isOver = true;
   }
 
   private _firstEmptyCellOnColumn(x: number): number {
     for (let y = 0; y < BOARD_HEIGHT; y++) {
-      const cell = cellOf(y, x);
+      const cell = indexOf(y, x);
 
       if (!isCellSet(this._fullOccupancy, cell))
         return cell;

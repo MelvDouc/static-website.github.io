@@ -1,5 +1,5 @@
 import Cell from "@/components/Connect4/Cell/Cell.js";
-import { BOARD_HEIGHT, BOARD_WIDTH, cellOf } from "@/components/Connect4/game/BoardDimensions.js";
+import { BOARD_HEIGHT, BOARD_WIDTH, indexOf } from "@/components/Connect4/game/BoardDimensions.js";
 import Game from "@/components/Connect4/game/Game.js";
 import cssClasses from "./Board.module.scss";
 
@@ -30,7 +30,7 @@ export default function Board() {
       {Array.from({ length: BOARD_HEIGHT }, (_, y) => (
         <section className={cssClasses.BoardRow}>
           {Array.from({ length: BOARD_WIDTH }, (_, x) => {
-            const cell = new Cell(cellOf(y, x));
+            const cell = new Cell(indexOf(y, x));
             cells.push(cell);
             return cell;
           })}
